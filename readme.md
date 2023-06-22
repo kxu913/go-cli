@@ -1,5 +1,5 @@
 # Go-cli
-**`Go-cli` is a project that base on `golang`+`echo` to create a microservice，if you also have `Docker` and `Kubernetes+Istio` environemtn，you also can use apis that in `serverless-generator` to deploy the service to Kubernetes and Istio.**
+**`Go-cli` is a project that base on `golang`+`echo` to create a microservice，if you also have `Docker` and `Kubernetes+Istio` environemtn，you can use apis that in `serverless-generator` to deploy the service to Kubernetes and Istio.**
 
 ## Demo
 <img src="public/cli-demo.gif" width="100%" height="100%">
