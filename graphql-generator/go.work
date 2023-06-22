@@ -1,0 +1,10 @@
+go 1.19
+
+use (
+	.
+	./src/db
+	./src/graphql
+	./src/middleware
+	./src/model
+	./src/route
+)

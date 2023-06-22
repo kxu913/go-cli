@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: graphql-generator
+  labels:
+    app: graphql-generator
+    service: graphql-generator
+spec:
+  ports:
+  - port: 9004
+    name: http
+  selector:
+    app: graphql-generator
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: graphql-generator-svc
+  labels:
+    account: graphql-generator-svc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: graphql-generator-v1
+  labels:
+    app: graphql-generator
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: graphql-generator
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: graphql-generator
+        version: v1
+    spec:
+      serviceAccountName: graphql-generator-svc
+      containers:
+      - name: graphql-generator
+        image: kevin_913/graphql-generator
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9004
+        securityContext:
+          runAsUser: 1000
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: graphql-generator
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - kevin-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /demo
+
+    route:
+    - destination:
+        host: graphql-generator
+        port:
+          number: 9004

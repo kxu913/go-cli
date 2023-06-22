@@ -1,0 +1,47 @@
+version: '2.1'
+services:
+  basic:
+    image: basic-generator:latest
+    ports:
+      - "1323:1323"
+    environment:
+      - output=/work/output/
+    volumes:
+      # replace it by your local folder.
+      - d:/tmp/wsl/:/work/output/
+
+  db:
+    image: db-api-generator:latest
+    ports:
+      - "1324:1324"
+    environment:
+      - output=/work/output/
+    volumes:
+      - d:/tmp/wsl/:/work/output/
+
+  graphql:
+    image: graphql-generator:latest
+    ports:
+      - "9004:9004"
+    environment:
+      - output=/work/output/
+      # replace db_host that container can access.
+      - db_host=172.22.192.1
+    volumes:
+      - d:/tmp/wsl/:/work/output/
+
+  it:
+    image: microservice-generator:latest
+    ports:
+      - "1325:1325"
+    environment:
+      - output=/work/output/
+      - basic_host=http://basic:1323
+      - db_host=http://db:1324
+      - graphql_host=http://graphql:9004
+    volumes:
+      - d:/tmp/wsl/:/work/output/
+    depends_on:
+      - basic
+      - db
+      - graphql

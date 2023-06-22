@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: serverless-generator
+  labels:
+    app: serverless-generator
+    service: serverless-generator
+spec:
+  ports:
+  - port: 9003
+    name: http
+  selector:
+    app: serverless-generator
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: serverless-generator-svc
+  labels:
+    account: serverless-generator-svc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: serverless-generator-v1
+  labels:
+    app: serverless-generator
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: serverless-generator
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: serverless-generator
+        version: v1
+    spec:
+      serviceAccountName: serverless-generator-svc
+      containers:
+      - name: serverless-generator
+        image: kevin_913/serverless-generator
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9003
+        securityContext:
+          runAsUser: 1000
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: serverless-generator
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - kevin-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /demo
+
+    route:
+    - destination:
+        host: serverless-generator
+        port:
+          number: 9003
