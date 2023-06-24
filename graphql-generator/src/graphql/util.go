@@ -86,6 +86,7 @@ func ParseSQL(query *model.Query) *model.Query {
 
 	return &model.Query{
 		ProjectName:      query.ProjectName,
+		Prefix:           query.Prefix,
 		QueryName:        Ucfirst(query.QueryName),
 		SQL:              query.SQL,
 		QueryDescription: query.QueryDescription,
@@ -138,6 +139,7 @@ func GenerateRouterFunc(project string, query *model.Query) {
 		"ProjectName": project,
 		"RouterName":  strings.ToLower(query.QueryName),
 		"QueryName":   query.QueryName,
+		"Prefix":      query.Prefix,
 	})
 }
 

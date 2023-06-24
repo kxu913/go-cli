@@ -11,7 +11,7 @@
 - 推荐通过docker-compose启动<br>
   在script目录下运行 `docker-compose up -d`
 - 克隆此项目到本地<br>
-  分别启动`basic-generator`、`db-api-generator`、`graphql-generator`、`microservice-generator`
+  分别启动`basic-generator`、`db-api-generator`、`graphql-generator`、`microservice-generator`,`serverless-generator`
 
 
 ## 模块介绍
@@ -113,44 +113,38 @@ curl --location 'http://localhost:9004/graphql/v1/sql' \
 
 ### serverless-generator
 通过API部署docker image到Kubernetes，以及部署API到Istio：
-#### 创建命名空间以及对应的Istio API规则。
-- `http://localhost:9003/cli/ns/{ns}`
-- 示例
-```
-curl --location --request POST 'http://localhost:9003/cli/ns/demo'
-```
 #### 部署服务到Kubernetes以及注入api到Istio。
-- `http://localhost:9003/cli/svc/{ns}`
+- `http://localhost:9003/cli/deploy`
 - MetaData：
     - Name: Kubernetes服务名称。
     - Version: Kubernetes服务版本。
+    - CloudProvider: 公有云的ECR地址，需要在代码里面配置你的账号，目前支持 `tx` 和 `ali`
     - Prefix： Api前缀。
 - Container：
-    - Image：部署镜像。
-    - Port：容器端口。
+    - Image：部署镜像。// 会通过project来获取镜像，你也可以指定镜像
+    - Port：容器端口。// 会通过Dockerfile来获取端口，你也可以指定端口。
     - ForceUpdate：强制更新，如果为`true`，每次部署都会重新拉取镜像。
     - RunAsRoot：是否以`root`启动容器。
     - Replicas：实例个数。
     - Environments：容器环境变量。
 - 示例
 ```
-curl --location 'http://localhost:9003/cli/svc/demo' \
+curl --location 'http://localhost:9003/cli/deploy' \
 --header 'Content-Type: application/json' \
 --data '{
     "MetaData": {
-        "Name": "demo",
+        "Name": "it",
         "Version": "v1",
-        "Prefix":"api/v1"
+        "CloudProvider": "tx",
+        "Prefix":"/api/v1"
     },
     "Container": {
-        "Image": "demo",
-        "Port": 9999,
-        "ForceUpdate": false,
+        "ForceUpdate": true,
         "RunAsRoot": false,
         "Environments": [
             {
                 "name": "db_host",
-                "value": "172.27.64.1"
+                "value": "172.22.192.1"
             }
         ]
     },

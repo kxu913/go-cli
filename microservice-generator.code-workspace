@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "db-api-generator"
+		},
+		{
+			"path": "serverless-generator"
+		},
+		{
+			"path": "graphql-generator"
+		},
+		{
+			"path": "basic-generator"
+		},
+		{
+			"path": "microservice-generator"
+		},
+		{
+			"path": "scripts"
+		}
+	],
+	"settings": {}
+}

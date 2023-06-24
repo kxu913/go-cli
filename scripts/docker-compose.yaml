@@ -1,7 +1,7 @@
 version: '2.1'
 services:
   basic:
-    image: basic-generator:latest
+    image: ccr.ccs.tencentyun.com/minicloud/basic-generator:v1
     ports:
       - "1323:1323"
     environment:
@@ -11,7 +11,7 @@ services:
       - d:/tmp/wsl/:/work/output/
 
   db:
-    image: db-api-generator:latest
+    image: ccr.ccs.tencentyun.com/minicloud/db-api-generator:v1
     ports:
       - "1324:1324"
     environment:
@@ -20,7 +20,7 @@ services:
       - d:/tmp/wsl/:/work/output/
 
   graphql:
-    image: graphql-generator:latest
+    image: ccr.ccs.tencentyun.com/minicloud/graphql-generator:v1
     ports:
       - "9004:9004"
     environment:
@@ -31,7 +31,7 @@ services:
       - d:/tmp/wsl/:/work/output/
 
   it:
-    image: microservice-generator:latest
+    image: ccr.ccs.tencentyun.com/minicloud/microservice-generator:v1
     ports:
       - "1325:1325"
     environment:
@@ -45,3 +45,15 @@ services:
       - basic
       - db
       - graphql
+
+  serverless:
+    image: ccr.ccs.tencentyun.com/minicloud/serverless-generator:v1
+    ports:
+      - "9003:9003"
+    environment:
+      - output=/work/output/
+      - kubeconfig=/work/kubeconfig/config
+    volumes:
+      - d:/tmp/wsl/:/work/output/
+      - C:/Users/kevin/.kube/config:/work/kubeconfig/config
+      - /var/run/docker.sock:/var/run/docker.sock

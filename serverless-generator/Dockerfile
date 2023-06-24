@@ -1,4 +1,4 @@
-FROM golang:1.19-alpine AS build
+FROM golang:1.19-alpine
 
 
 WORKDIR /work/
@@ -17,14 +17,14 @@ RUN go mod download
 
 RUN go build -o .
 
-FROM alpine:latest
+# FROM alpine:latest
 
-WORKDIR /
+# WORKDIR /
 
-COPY --from=build /work /work
+# COPY --from=build /work /work
 
 EXPOSE 9003
 
-WORKDIR /work/
+# WORKDIR /work/
 
 ENTRYPOINT ["./serverless-generator"]

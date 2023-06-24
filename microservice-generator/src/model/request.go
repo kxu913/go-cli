@@ -34,6 +34,7 @@ func SetDBRequestFromBasicRequest(request *ServiceRequest) DBRequest {
 
 type GraphqlRequest struct {
 	ProjectName      string
+	Prefix           string
 	QueryName        string
 	QueryDescription string
 	SQL              string
@@ -42,6 +43,7 @@ type GraphqlRequest struct {
 func SetGraphqlRequestFromBasicRequest(request *ServiceRequest) GraphqlRequest {
 	graphqlRequest := request.Graphql
 	graphqlRequest.ProjectName = request.Basic.ProjectName
+	graphqlRequest.Prefix = request.Basic.Prefix
 	return graphqlRequest
 
 }

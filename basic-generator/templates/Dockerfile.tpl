@@ -8,7 +8,7 @@ RUN go env -w  GOPROXY=https://goproxy.cn,direct
 RUN chown 1001 /work \
     && chmod "g+rwX" /work \
     && chown 1001:root /work
-COPY go.* /work/
+COPY go.mod /work/
 COPY main.go /work/
 COPY src /work/src/
 

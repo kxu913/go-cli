@@ -26,3 +26,14 @@ func CreateNS(ns string) *corev1.Namespace {
 	}
 	return createdNS
 }
+
+func DestroyNS(ns string) {
+
+	clientSet := ClientSet()
+
+	err := clientSet.CoreV1().Namespaces().Delete(context.TODO(), ns, metav1.DeleteOptions{})
+	if err != nil {
+		panic(err)
+	}
+
+}

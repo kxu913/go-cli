@@ -17,8 +17,8 @@ func Get{{.QueryName}}Graphql(c echo.Context) error {
 }
 
 func {{.QueryName}}GroupGraphql(e *echo.Echo) {
-	t := e.Group("/graphql/v1")
-	t.GET("/{{.RouterName}}", Get{{.QueryName}}Graphql)
+	t := e.Group("{{.Prefix}}")
+	t.GET("/ghql/{{.RouterName}}", Get{{.QueryName}}Graphql)
 
 
 }

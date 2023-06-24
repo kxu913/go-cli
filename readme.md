@@ -1,6 +1,12 @@
 # Go-cli
 **`Go-cli` is a project that base on `golang`+`echo` to create a microservice，if you also have `Docker` and `Kubernetes+Istio` environemtn，you also can use apis that in `serverless-generator` to deploy the service to Kubernetes and Istio.**
 
+You just need two steps:
+- Create a micro service project using `microservice-generator`
+- Deploy the project to Kubernetes using `serverless-generator`, support to remote Kubernetes.
+
+Now you can access the apis by `http://{gateway-name}/{Prefix}`
+
 ## Demo
 <img src="public/cli-demo.gif" width="100%" height="100%">
 
@@ -8,7 +14,7 @@
 - Recommend use docker-compose to start.<br>
   Clone project and Run `docker-compose up -d` in scripts folder.
 - Clone project<br>
-  Start `basic-generator`、`db-api-generator`、`graphql-generator`、`microservice-generator`
+  Start `basic-generator`、`db-api-generator`、`graphql-generator`、`microservice-generator`、`serverless-generator`
 
 
 ## Module introduce.
@@ -111,44 +117,38 @@ curl --location 'http://localhost:9004/graphql/v1/sql' \
 
 ### serverless-generator
 Use API to deploy docker image to Kubernetes，and create api in Istio：
-#### Create namespace and Gateway.
-- `http://localhost:9003/cli/ns/{ns}`
-- Eg.
-```
-curl --location --request POST 'http://localhost:9003/cli/ns/demo'
-```
 #### Deploy service to Kubernetes，and inject api to gateway.
-- `http://localhost:9003/cli/svc/{ns}`
+- `http://localhost:9003/deploy`
 - MetaData：
     - Name: Kubernetes service name.
+    - CloudProvider: Public ECR, current support Tencent tcr and Ali ecr, valid value is `tx`,`ali`, you need configure your account of the specify ECR in `serverless-generator`.
     - Version: Kubernetes service version.
     - Prefix： Api prefix.
 - Container：
-    - Image：docker image.
-    - Port：container port.
+    - Image：Default is image that get from public ECR by name, you can specify it using your image.
+    - Port：Default is `EXPOSE {port}` in Dockerfile, if you specify your image, you need overide it.
     - ForceUpdate：if `true`，Kubernetes will alway push image during deployment.
     - RunAsRoot：if `true`, Kubernetes will run the container as `root`.
     - Replicas：container replicas.
     - Environments：environments of container.
 - Eg.
 ```
-curl --location 'http://localhost:9003/cli/svc/demo' \
+curl --location 'http://localhost:9003/cli/deploy' \
 --header 'Content-Type: application/json' \
 --data '{
     "MetaData": {
-        "Name": "demo",
+        "Name": "it",
         "Version": "v1",
-        "Prefix":"api/v1"
+        "CloudProvider": "tx",
+        "Prefix":"/api/v1"
     },
     "Container": {
-        "Image": "demo",
-        "Port": 9999,
-        "ForceUpdate": false,
+        "ForceUpdate": true,
         "RunAsRoot": false,
         "Environments": [
             {
                 "name": "db_host",
-                "value": "172.27.64.1"
+                "value": "172.22.192.1"
             }
         ]
     },

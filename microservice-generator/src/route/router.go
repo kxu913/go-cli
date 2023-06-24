@@ -39,16 +39,17 @@ func CreateService(c echo.Context) error {
 		return c.String(http.StatusNotAcceptable, "Invalid Json")
 	}
 	basicRequest := request.Basic
-
+	fmt.Println(basicRequest)
 	_basicRequest, _ := json.Marshal(basicRequest)
 	http.Post(fmt.Sprintf("%s/cli/v1/init", basicRequestUrl), "application/json", bytes.NewBuffer(_basicRequest))
 	dbRequest := model.SetDBRequestFromBasicRequest(request)
-
+	fmt.Println(dbRequest)
 	_dbRequest, _ := json.Marshal(dbRequest)
 	http.Post(fmt.Sprintf("%s/cli/v1/db/%s", dbRequestUrl, dbRequest.Table), "application/json", bytes.NewBuffer(_dbRequest))
 
 	if request.Graphql.SQL != "" {
 		graphqlRequest := model.SetGraphqlRequestFromBasicRequest(request)
+		fmt.Println(graphqlRequest)
 		_graphqlRequest, _ := json.Marshal(graphqlRequest)
 		http.Post(fmt.Sprintf("%s/graphql/v1/sql", graphqlRequestUrl), "application/json", bytes.NewBuffer(_graphqlRequest))
 	}

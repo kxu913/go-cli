@@ -1,9 +1,10 @@
 package model
 
 type MetaData struct {
-	Name    string
-	Version string
-	Prefix  string
+	Name          string
+	Version       string
+	Prefix        string
+	CloudProvider string
 }
 
 func MetaDataToMap(metaData *MetaData) map[string]any {
